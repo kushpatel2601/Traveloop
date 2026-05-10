@@ -123,23 +123,22 @@ export default function AuthPage() {
               useOneTap
               theme="filled_blue"
               shape="pill"
+              width="400"
             />
+            <button className="google-style-btn" onClick={() => {
+              const guestUser = { name: 'Hackathon Judge', email: 'judge@odoo.com', avatar: '👨‍⚖️', joinedAt: new Date().toISOString() };
+              dispatch({ type: 'LOGIN', payload: guestUser });
+              navigate('/dashboard');
+            }}>
+              <span className="btn-icon">G</span>
+              Sign in as Guest / Demo Mode
+            </button>
           </div>
 
           <div className="auth-switch">
             {isLogin ? "Don't have an account?" : 'Already have an account?'}
             <button onClick={() => { setIsLogin(!isLogin); setError(''); }} id="auth-switch-btn">
               {isLogin ? 'Sign Up' : 'Sign In'}
-            </button>
-          </div>
-
-          <div className="auth-guest-access mt-6">
-            <button className="btn-secondary w-full" onClick={() => {
-              const guestUser = { name: 'Hackathon Judge', email: 'judge@odoo.com', avatar: '👨‍⚖️', joinedAt: new Date().toISOString() };
-              dispatch({ type: 'LOGIN', payload: guestUser });
-              navigate('/dashboard');
-            }}>
-              Continue as Guest / Demo Mode
             </button>
           </div>
         </div>
