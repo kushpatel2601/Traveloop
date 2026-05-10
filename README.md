@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="<img width="1905" height="970" alt="image" src="https://github.com/user-attachments/assets/59700858-9207-4b1d-818f-42f6185ca4f9" />
-" alt="Traveloop Banner" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 20px;" />
+  <img src="https://github.com/user-attachments/assets/59700858-9207-4b1d-818f-42f6185ca4f9"
+ alt="Traveloop Banner" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 20px;" />
   
   <h1>🌍 Traveloop</h1>
   <p><strong>A Next-Generation Travel OS & Itinerary Planner</strong></p>
