@@ -121,29 +121,14 @@ export default function AuthPage() {
           <div className="auth-divider"><span>OR</span></div>
 
           <div className="google-auth-wrapper">
-            {/* Custom Demo Google Button - Bypasses Origin Mismatch for Hackathon */}
-            <button className="google-style-btn" onClick={() => {
-              const demoUser = { 
-                name: 'Kush Patel', 
-                email: 'kushp8484@gmail.com', 
-                avatar: 'https://lh3.googleusercontent.com/a/ACg8ocL-f-f-f-f-f-f=s96-c',
-                joinedAt: new Date().toISOString() 
-              };
-              dispatch({ type: 'LOGIN', payload: demoUser });
-              navigate('/dashboard');
-            }}>
-              <span className="btn-icon">G</span>
-              Sign in with Google
-            </button>
-            
-            <button className="google-style-btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-glass)', color: 'var(--text-secondary)' }} onClick={() => {
-              const guestUser = { name: 'Hackathon Judge', email: 'judge@odoo.com', avatar: '👨‍⚖️', joinedAt: new Date().toISOString() };
-              dispatch({ type: 'LOGIN', payload: guestUser });
-              navigate('/dashboard');
-            }}>
-              <span className="btn-icon" style={{ background: 'var(--text-muted)', color: 'white' }}>J</span>
-              Continue as Guest Mode
-            </button>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Login Failed')}
+              useOneTap
+              theme="filled_blue"
+              shape="pill"
+              width="400"
+            />
           </div>
 
           <div className="auth-switch">
@@ -152,6 +137,16 @@ export default function AuthPage() {
               {isLogin ? 'Sign Up' : 'Sign In'}
             </button>
           </div>
+
+          <div className="auth-divider"><span>OR</span></div>
+          
+          <button className="btn-secondary w-full" style={{ borderRadius: '20px', padding: '10px' }} onClick={() => {
+            const guestUser = { name: 'Demo Explorer', email: 'guest@traveloop.com', avatar: '✈️', joinedAt: new Date().toISOString() };
+            dispatch({ type: 'LOGIN', payload: guestUser });
+            navigate('/dashboard');
+          }}>
+            Continue as Guest (No Login Required)
+          </button>
         </div>
 
         <div className="auth-features">
