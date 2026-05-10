@@ -46,7 +46,7 @@ export default function ProfilePage() {
         <div className="profile-banner">
           <div className="profile-banner-gradient" />
           <div className="profile-banner-icons">
-            {['✈️','🗺️','🏔️','🌊','🏝️'].map((e,i) => (
+            {['✈️', '🗺️', '🏔️', '🌊', '🏝️'].map((e, i) => (
               <span key={i} className="banner-float-icon" style={{ animationDelay: `${i * 0.4}s` }}>{e}</span>
             ))}
           </div>
@@ -157,7 +157,7 @@ export default function ProfilePage() {
                 <button className="btn-link" onClick={() => navigate('/trips')}>View All</button>
               </div>
               <div className="profile-trips-list">
-                {upcomingTrips.slice(0,3).map(trip => (
+                {upcomingTrips.slice(0, 3).map(trip => (
                   <div key={trip.id} className="profile-trip-row" onClick={() => navigate(`/trip/${trip.id}/itinerary`)}>
                     <div className="ptr-emoji">🏔️</div>
                     <div className="ptr-info">

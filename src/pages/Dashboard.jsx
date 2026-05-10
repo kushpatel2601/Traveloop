@@ -77,7 +77,7 @@ export default function Dashboard() {
           <div className="banner-dest-switcher">
             {DESTINATION_IMAGES.map((d, i) => (
               <button key={d.city} className={`dest-thumb ${activeDestIdx === i ? 'active' : ''}`} onClick={() => setActiveDestIdx(i)}>
-                <img src={d.url} alt={d.city} onError={e => { e.target.parentElement.style.background='rgba(99,102,241,0.2)'; }} />
+                <img src={d.url} alt={d.city} onError={e => { e.target.parentElement.style.background = 'rgba(99,102,241,0.2)'; }} />
                 <span>{d.city}</span>
               </button>
             ))}

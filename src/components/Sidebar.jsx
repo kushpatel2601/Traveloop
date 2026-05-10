@@ -92,7 +92,13 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         <div className="sidebar-footer">
           {state.user && !collapsed && (
             <div className="user-info">
-              <div className="user-avatar-sb">{state.user.name?.[0]?.toUpperCase() || '?'}</div>
+              <div className="user-avatar-sb overflow-hidden">
+                {state.user?.avatar && state.user.avatar.startsWith('http') ? (
+                  <img src={state.user.avatar} alt={state.user.name} className="w-full h-full object-cover" />
+                ) : (
+                  state.user.avatar || state.user.name?.[0]?.toUpperCase() || '?'
+                )}
+              </div>
               <div className="user-details-sb">
                 <span className="user-name-sb">{state.user.name}</span>
                 <span className="user-email-sb">{state.user.email}</span>
@@ -101,7 +107,13 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           )}
           {state.user && collapsed && (
             <div className="user-info collapsed-user">
-              <div className="user-avatar-sb">{state.user.name?.[0]?.toUpperCase() || '?'}</div>
+              <div className="user-avatar-sb overflow-hidden">
+                {state.user?.avatar && state.user.avatar.startsWith('http') ? (
+                  <img src={state.user.avatar} alt={state.user.name} className="w-full h-full object-cover" />
+                ) : (
+                  state.user.avatar || state.user.name?.[0]?.toUpperCase() || '?'
+                )}
+              </div>
             </div>
           )}
           <button className="nav-link logout-btn" onClick={handleLogout} id="logout-btn">
