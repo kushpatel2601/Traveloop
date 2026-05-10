@@ -183,7 +183,13 @@ export default function Dashboard() {
           {/* Profile Summary Card (Screen 4 parity) */}
           <section className="glass-card dash-profile-card animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
             <div className="dpc-header" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
-              <div className="dpc-avatar">{user?.avatar || user?.name?.[0]?.toUpperCase() || '✈️'}</div>
+              <div className="dpc-avatar overflow-hidden">
+                {user?.avatar && user.avatar.startsWith('http') ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  user?.avatar || user?.name?.[0]?.toUpperCase() || '✈️'
+                )}
+              </div>
               <div className="dpc-info">
                 <h3>{user?.name || 'Explorer'}</h3>
                 <span>{user?.email}</span>
