@@ -93,11 +93,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           {state.user && !collapsed && (
             <div className="user-info">
               <div className="user-avatar-sb overflow-hidden">
-                {state.user?.avatar && state.user.avatar.startsWith('http') ? (
-                  <img src={state.user.avatar} alt={state.user.name} className="w-full h-full object-cover" />
-                ) : (
-                  state.user.avatar || state.user.name?.[0]?.toUpperCase() || '?'
-                )}
+                {state.user.name?.[0]?.toUpperCase() || '?'}
               </div>
               <div className="user-details-sb">
                 <span className="user-name-sb">{state.user.name}</span>
@@ -108,11 +104,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           {state.user && collapsed && (
             <div className="user-info collapsed-user">
               <div className="user-avatar-sb overflow-hidden">
-                {state.user?.avatar && state.user.avatar.startsWith('http') ? (
-                  <img src={state.user.avatar} alt={state.user.name} className="w-full h-full object-cover" />
-                ) : (
-                  state.user.avatar || state.user.name?.[0]?.toUpperCase() || '?'
-                )}
+                {state.user.name?.[0]?.toUpperCase() || '?'}
               </div>
             </div>
           )}
