@@ -1,0 +1,37 @@
+.create-trip-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+}
+.create-trip-form-card { padding: 32px; }
+.create-trip-form-card form { display: flex; flex-direction: column; gap: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.create-submit { margin-top: 12px; font-size: 1.05rem; padding: 14px; }
+
+.templates-section { padding-top: 12px; }
+.templates-section h3 { font-size: 1.1rem; margin-bottom: 16px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+.templates-grid { display: flex; flex-direction: column; gap: 12px; }
+.template-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border-glass);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+.template-card:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--accent-primary);
+  transform: translateX(4px);
+}
+.template-emoji { font-size: 1.8rem; background: rgba(255,255,255,0.05); padding: 8px; border-radius: var(--radius-sm); }
+.template-name { flex: 1; font-weight: 600; font-size: 0.95rem; }
+.template-days { font-size: 0.8rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: var(--radius-full); }
+
+@media (max-width: 900px) { .create-trip-layout { grid-template-columns: 1fr; } .templates-grid { display: grid; grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .templates-grid { grid-template-columns: 1fr; } }
