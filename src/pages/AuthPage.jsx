@@ -40,26 +40,30 @@ export default function AuthPage() {
         joinedAt: new Date().toISOString() 
       };
 
-      // Attempt backend auth, but don't block the UI if it fails during hackathon
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-        const res = await fetch(`${apiUrl}/api/auth/google`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: credentialResponse.credential }),
-        });
-        const data = await res.json();
-        if (res.ok) {
-          localStorage.setItem('token', data.accessToken);
-          dispatch({ type: 'LOGIN', payload: data.user });
-          navigate('/dashboard');
-          return;
+      // Attempt backend auth ONLY if we are on localhost
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (isLocal) {
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+          const res = await fetch(`${apiUrl}/api/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: credentialResponse.credential }),
+          });
+          const data = await res.json();
+          if (res.ok) {
+            localStorage.setItem('token', data.accessToken);
+            dispatch({ type: 'LOGIN', payload: data.user });
+            navigate('/dashboard');
+            return;
+          }
+        } catch (backendErr) {
+          console.warn('Backend unreachable, using client session');
         }
-      } catch (backendErr) {
-        console.warn('Backend unreachable, proceeding with client-side session for demo');
       }
 
-      // Fallback for demo: Log in client-side anyway
+      // Fallback for Vercel/Production: Log in client-side immediately
       dispatch({ type: 'LOGIN', payload: user });
       navigate('/dashboard');
 
