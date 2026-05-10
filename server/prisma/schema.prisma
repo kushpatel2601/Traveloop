@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  trips     Trip[]
+  posts     CommunityPost[]
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  description String?
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+  stops       Stop[]
+  packingList PackingItem[]
+  notes       Note[]
+}
+
+model City {
+  id          String   @id @default(cuid())
+  name        String
+  country     String
+  region      String
+  costIndex   Int
+  popularity  Int
+  image       String
+  description String
+  lat         Float
+  lng         Float
+  
+  stops       Stop[]
+  activities  Activity[]
+}
+
+model Stop {
+  id        String   @id @default(cuid())
+  tripId    String
+  cityId    String
+  days      Int
+  order     Int      @default(0)
+  
+  trip      Trip     @relation(fields: [tripId], references: [id])
+  city      City     @relation(fields: [cityId], references: [id])
+  activities StopActivity[]
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  cityId      String
+  name        String
+  type        String
+  cost        Float
+  duration    Int
+  description String
+  image       String
+  
+  city        City     @relation(fields: [cityId], references: [id])
+  stopAssoc   StopActivity[]
+}
+
+model StopActivity {
+  id         String   @id @default(cuid())
+  stopId     String
+  activityId String
+  
+  stop       Stop     @relation(fields: [stopId], references: [id])
+  activity   Activity @relation(fields: [activityId], references: [id])
+}
+
+model PackingItem {
+  id       String  @id @default(cuid())
+  tripId   String
+  text     String
+  category String
+  checked  Boolean @default(false)
+  
+  trip     Trip    @relation(fields: [tripId], references: [id])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  tripId    String
+  text      String
+  createdAt DateTime @default(now())
+  
+  trip      Trip     @relation(fields: [tripId], references: [id])
+}
+
+model CommunityPost {
+  id          String   @id @default(cuid())
+  userId      String
+  tripName    String
+  description String
+  likes       Int      @default(0)
+  comments    Int      @default(0)
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
