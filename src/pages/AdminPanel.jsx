@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Shield, Users, Activity, Map, Search } from 'lucide-react';
+import { Shield, Users, Activity, Map, Search, Edit3, Trash2, Plus } from 'lucide-react';
+import { useTravel } from '../store/TravelContext';
 
 export default function AdminPanel() {
+  const { state } = useTravel();
   const [activeTab, setActiveTab] = useState('users');
 
   const users = [
@@ -65,8 +67,56 @@ export default function AdminPanel() {
               </div>
             </div>
           )}
-          {activeTab === 'cities' && <div className="text-center p-8 text-secondary">City management module coming soon.</div>}
-          {activeTab === 'activities' && <div className="text-center p-8 text-secondary">Activity management module coming soon.</div>}
+          {activeTab === 'cities' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl">City Management</h3>
+                <button className="btn-primary sm"><Plus size={16} /> Add City</button>
+              </div>
+              <div className="flex flex-col gap-4">
+                {state.cities.map(city => (
+                  <div key={city.id} className="flex items-center justify-between p-4 border border-glass rounded-lg hover-bg-glass">
+                    <div className="flex items-center gap-4">
+                      <div className="text-3xl">{city.image}</div>
+                      <div>
+                        <h4 className="font-semibold">{city.name}</h4>
+                        <span className="text-sm text-secondary">{city.country} · {city.region}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <button className="btn-secondary sm"><Edit3 size={14} /></button>
+                      <button className="btn-icon btn-danger sm"><Trash2 size={14} /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {activeTab === 'activities' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl">Activity Management</h3>
+                <button className="btn-primary sm"><Plus size={16} /> Add Activity</button>
+              </div>
+              <div className="flex flex-col gap-4">
+                {state.activities.map(act => (
+                  <div key={act.id} className="flex items-center justify-between p-4 border border-glass rounded-lg hover-bg-glass">
+                    <div className="flex items-center gap-4">
+                      <div className="text-3xl">{act.image}</div>
+                      <div>
+                        <h4 className="font-semibold">{act.name}</h4>
+                        <span className="text-sm text-secondary">{act.type} · ${act.cost}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <button className="btn-secondary sm"><Edit3 size={14} /></button>
+                      <button className="btn-icon btn-danger sm"><Trash2 size={14} /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

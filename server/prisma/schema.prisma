@@ -11,7 +11,7 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String
-  password  String
+  password  String?
   createdAt DateTime @default(now())
   trips     Trip[]
   posts     CommunityPost[]
@@ -61,17 +61,18 @@ model Stop {
 }
 
 model Activity {
-  id          String   @id @default(cuid())
-  cityId      String
-  name        String
-  type        String
-  cost        Float
-  duration    Int
-  description String
-  image       String
+  id               String   @id @default(cuid())
+  cityId           String
+  name             String
+  type             String
+  cost             Float
+  duration         Int
+  physicalActivity String   @default("Low") // Added to match design
+  description      String
+  image            String
   
-  city        City     @relation(fields: [cityId], references: [id])
-  stopAssoc   StopActivity[]
+  city             City     @relation(fields: [cityId], references: [id])
+  stopAssoc        StopActivity[]
 }
 
 model StopActivity {

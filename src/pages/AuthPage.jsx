@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTravel } from '../store/TravelContext';
 import { Plane, Mail, Lock, User, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import './Auth.css';
 
 export default function AuthPage() {
@@ -22,6 +23,27 @@ export default function AuthPage() {
     const user = { name: form.name || form.email.split('@')[0], email: form.email, joinedAt: new Date().toISOString() };
     dispatch({ type: isLogin ? 'LOGIN' : 'SIGNUP', payload: user });
     navigate('/dashboard');
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const res = await fetch('http://localhost:3001/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('token', data.accessToken);
+        dispatch({ type: 'LOGIN', payload: data.user });
+        navigate('/dashboard');
+      } else {
+        setError(data.message || 'Google login failed');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Connection error');
+    }
   };
 
   return (
@@ -68,6 +90,18 @@ export default function AuthPage() {
               {isLogin ? 'Sign In' : 'Create Account'} <ArrowRight size={18} />
             </button>
           </form>
+
+          <div className="auth-divider"><span>OR</span></div>
+
+          <div className="google-auth-wrapper">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Login Failed')}
+              useOneTap
+              theme="filled_blue"
+              shape="pill"
+            />
+          </div>
 
           <div className="auth-switch">
             {isLogin ? "Don't have an account?" : 'Already have an account?'}

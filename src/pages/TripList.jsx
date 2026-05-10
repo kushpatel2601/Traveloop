@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTravel } from '../store/TravelContext';
-import { Map, Calendar, MapPin, Trash2, Edit3, PlusCircle, Globe } from 'lucide-react';
+import { Map, Calendar, MapPin, Trash2, Edit3, PlusCircle, Globe, Clock } from 'lucide-react';
 import './TripList.css';
 
 export default function TripList() {
   const { state, dispatch } = useTravel();
   const navigate = useNavigate();
+  const [activeFilter, setActiveFilter] = useState('All');
 
   const deleteTrip = (e, id) => {
     e.stopPropagation();
@@ -13,6 +15,15 @@ export default function TripList() {
       dispatch({ type: 'DELETE_TRIP', payload: id });
     }
   };
+
+  const now = new Date();
+  const filtered = state.trips.filter(trip => {
+    if (activeFilter === 'Upcoming') return new Date(trip.startDate) >= now;
+    if (activeFilter === 'Past') return new Date(trip.endDate) < now;
+    return true;
+  });
+
+  const tabs = ['All', 'Upcoming', 'Past'];
 
   return (
     <div className="page-container content-wrapper">
@@ -29,20 +40,36 @@ export default function TripList() {
         </div>
       </div>
 
-      {state.trips.length === 0 ? (
+      {/* Filter Tabs */}
+      <div className="trip-filter-tabs animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+        {tabs.map(tab => (
+          <button
+            key={tab}
+            className={`trip-filter-tab ${activeFilter === tab ? 'active' : ''}`}
+            onClick={() => setActiveFilter(tab)}
+          >
+            {tab}
+            <span className="tab-count">
+              {tab === 'All' ? state.trips.length : tab === 'Upcoming' ? state.trips.filter(t => new Date(t.startDate) >= now).length : state.trips.filter(t => new Date(t.endDate) < now).length}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
         <div className="empty-state glass-card animate-fade-in">
           <div className="empty-icon"><Globe size={64} /></div>
-          <h3>No trips yet</h3>
+          <h3>{activeFilter === 'All' ? 'No trips yet' : `No ${activeFilter.toLowerCase()} trips`}</h3>
           <p>Start planning your first adventure to see it here.</p>
           <button className="btn-primary" onClick={() => navigate('/create-trip')}>Plan a Trip</button>
         </div>
       ) : (
         <div className="trip-list-grid stagger-children">
-          {state.trips.map(trip => {
+          {filtered.map(trip => {
             const startDate = new Date(trip.startDate);
             const endDate = new Date(trip.endDate);
             const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-            const isPast = endDate < new Date();
+            const isPast = endDate < now;
 
             return (
               <div key={trip.id} className={`trip-card-lg glass-card ${isPast ? 'past-trip' : ''}`} onClick={() => navigate(`/trip/${trip.id}/itinerary`)} id={`trip-${trip.id}`}>
@@ -64,11 +91,11 @@ export default function TripList() {
                   <div className="trip-meta-grid">
                     <div className="meta-item"><Calendar size={14} /> <span>{startDate.toLocaleDateString('en', { month: 'short', day: 'numeric' })} - {endDate.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
                     <div className="meta-item"><MapPin size={14} /> <span>{trip.stops?.length || 0} destinations</span></div>
-                    <div className="meta-item"><span>⏱️</span> <span>{duration} days</span></div>
+                    <div className="meta-item"><Clock size={14} /> <span>{duration} days</span></div>
                   </div>
                   <div className="trip-progress">
                     <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${Math.min(100, ((trip.stops?.length || 0) / duration) * 100)}%` }} />
+                      <div className="progress-fill" style={{ width: `${Math.min(100, ((trip.stops?.length || 0) / Math.max(duration, 1)) * 100)}%` }} />
                     </div>
                     <span className="progress-text">{trip.stops?.length || 0} / {duration} days planned</span>
                   </div>

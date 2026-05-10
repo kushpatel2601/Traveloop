@@ -114,6 +114,29 @@
 }
 .auth-switch button { background: none; color: var(--accent-primary-hover); font-weight: 600; padding: 0; font-size: 0.9rem; }
 .auth-switch button:hover { text-decoration: underline; }
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-glass);
+}
+.auth-divider span {
+  padding: 0 10px;
+}
+.google-auth-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
 .auth-features {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

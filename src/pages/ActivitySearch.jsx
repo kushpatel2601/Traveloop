@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useTravel } from '../store/TravelContext';
-import { Compass, Clock, DollarSign, Filter, Search } from 'lucide-react';
+import { Compass, Clock, DollarSign, Filter, Search, PlusCircle } from 'lucide-react';
 
 export default function ActivitySearch() {
-  const { state } = useTravel();
+  const { state, dispatch } = useTravel();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('All');
+  const [selectedActForTrip, setSelectedActForTrip] = useState(null);
 
   const types = ['All', ...new Set(state.activities.map(a => a.type))];
 
@@ -14,6 +15,16 @@ export default function ActivitySearch() {
     const matchesType = filterType === 'All' || act.type === filterType;
     return matchesSearch && matchesType;
   });
+
+  const handleAddActivity = (act, combinedId) => {
+    if (combinedId === 'CANCEL') {
+      setSelectedActForTrip(null);
+      return;
+    }
+    const [tripId, stopId] = combinedId.split('|');
+    dispatch({ type: 'ADD_ACTIVITY_TO_STOP', payload: { tripId, stopId, activity: act } });
+    setSelectedActForTrip(null);
+  };
 
   return (
     <div className="page-container content-wrapper">
@@ -54,7 +65,12 @@ export default function ActivitySearch() {
               <span className="explore-act-emoji">{act.image}</span>
               <div>
                 <h3>{act.name}</h3>
-                <span className="badge badge-accent">{act.type}</span>
+                <div className="badge-row">
+                  <span className="badge badge-accent">{act.type}</span>
+                  <span className={`activity-level-badge ${act.physicalActivity?.toLowerCase()}`}>
+                    {act.physicalActivity} Intensity
+                  </span>
+                </div>
               </div>
             </div>
             <p className="explore-act-desc">{act.description}</p>
@@ -66,6 +82,29 @@ export default function ActivitySearch() {
               <div className="act-cities">
                 Available in {act.cityIds.length} {act.cityIds.length === 1 ? 'city' : 'cities'}
               </div>
+            </div>
+            
+            <div style={{ marginTop: '16px' }}>
+              {selectedActForTrip === act.id ? (
+                <select 
+                  className="btn-secondary sm w-full" 
+                  onChange={(e) => { if(e.target.value) handleAddActivity(act, e.target.value); }}
+                  defaultValue=""
+                >
+                  <option value="" disabled>Select Trip & Stop</option>
+                  {state.trips.map(t => 
+                    t.stops?.filter(s => act.cityIds.includes(s.cityId)).map(s => {
+                      const city = state.cities.find(c => c.id === s.cityId);
+                      return <option key={`${t.id}|${s.id}`} value={`${t.id}|${s.id}`}>{t.name} - {city?.name}</option>
+                    })
+                  )}
+                  <option value="CANCEL">Cancel</option>
+                </select>
+              ) : (
+                <button className="btn-secondary sm w-full" onClick={() => setSelectedActForTrip(act.id)}>
+                  Add to Trip <PlusCircle size={14}/>
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -87,12 +126,25 @@ export default function ActivitySearch() {
         .act-header-info { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
         .explore-act-emoji { font-size: 2.5rem; background: rgba(255,255,255,0.05); padding: 12px; border-radius: var(--radius-md); }
         .act-header-info h3 { font-size: 1.15rem; margin-bottom: 8px; line-height: 1.3; }
+        .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .activity-level-badge {
+          font-size: 0.7rem;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 12px;
+          text-transform: uppercase;
+        }
+        .activity-level-badge.low { background: rgba(16,185,129,0.15); color: #34d399; }
+        .activity-level-badge.medium { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .activity-level-badge.high { background: rgba(244,63,94,0.15); color: #fb7185; }
+        
         .explore-act-desc { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px; flex: 1; }
         .explore-act-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-glass); padding-top: 16px; }
         .act-stats { display: flex; gap: 16px; font-weight: 600; font-size: 0.9rem; }
         .act-stats span { display: flex; align-items: center; gap: 4px; }
         .text-emerald-400 { color: var(--accent-emerald); }
         .act-cities { font-size: 0.8rem; color: var(--text-muted); }
+        .w-full { width: 100%; justify-content: center; }
 
         @media (max-width: 640px) {
           .search-bar-container { flex-direction: column; }

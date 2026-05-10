@@ -1,43 +1,43 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
 
 const CITIES_DB = [
-  { id: 'c1', name: 'Paris', country: 'France', region: 'Europe', costIndex: 4, popularity: 95, image: '🗼', description: 'City of Light, romance, and world-class cuisine', lat: 48.8566, lng: 2.3522 },
-  { id: 'c2', name: 'Tokyo', country: 'Japan', region: 'Asia', costIndex: 4, popularity: 92, image: '🏯', description: 'A fusion of ultramodern and traditional culture', lat: 35.6762, lng: 139.6503 },
-  { id: 'c3', name: 'New York', country: 'USA', region: 'North America', costIndex: 5, popularity: 93, image: '🗽', description: 'The city that never sleeps', lat: 40.7128, lng: -74.006 },
-  { id: 'c4', name: 'Bali', country: 'Indonesia', region: 'Asia', costIndex: 2, popularity: 88, image: '🏝️', description: 'Tropical paradise with ancient temples', lat: -8.3405, lng: 115.092 },
-  { id: 'c5', name: 'Barcelona', country: 'Spain', region: 'Europe', costIndex: 3, popularity: 87, image: '⛪', description: 'Gaudí architecture meets Mediterranean vibes', lat: 41.3874, lng: 2.1686 },
-  { id: 'c6', name: 'Dubai', country: 'UAE', region: 'Middle East', costIndex: 5, popularity: 85, image: '🏙️', description: 'Futuristic skyline and luxury experiences', lat: 25.2048, lng: 55.2708 },
-  { id: 'c7', name: 'Rome', country: 'Italy', region: 'Europe', costIndex: 3, popularity: 90, image: '🏛️', description: 'Eternal city of history and art', lat: 41.9028, lng: 12.4964 },
-  { id: 'c8', name: 'Bangkok', country: 'Thailand', region: 'Asia', costIndex: 1, popularity: 86, image: '🛕', description: 'Street food capital with golden temples', lat: 13.7563, lng: 100.5018 },
-  { id: 'c9', name: 'London', country: 'UK', region: 'Europe', costIndex: 5, popularity: 91, image: '🎡', description: 'Historic charm meets modern energy', lat: 51.5074, lng: -0.1278 },
-  { id: 'c10', name: 'Sydney', country: 'Australia', region: 'Oceania', costIndex: 4, popularity: 84, image: '🏖️', description: 'Stunning harbors and beaches', lat: -33.8688, lng: 151.2093 },
-  { id: 'c11', name: 'Istanbul', country: 'Turkey', region: 'Europe', costIndex: 2, popularity: 83, image: '🕌', description: 'Where East meets West', lat: 41.0082, lng: 28.9784 },
-  { id: 'c12', name: 'Marrakech', country: 'Morocco', region: 'Africa', costIndex: 2, popularity: 78, image: '🏜️', description: 'Vibrant souks and desert charm', lat: 31.6295, lng: -7.9811 },
-  { id: 'c13', name: 'Kyoto', country: 'Japan', region: 'Asia', costIndex: 3, popularity: 82, image: '⛩️', description: 'Ancient capital of temples and geishas', lat: 35.0116, lng: 135.7681 },
-  { id: 'c14', name: 'Cape Town', country: 'South Africa', region: 'Africa', costIndex: 2, popularity: 80, image: '🏔️', description: 'Where mountains meet the ocean', lat: -33.9249, lng: 18.4241 },
-  { id: 'c15', name: 'Lisbon', country: 'Portugal', region: 'Europe', costIndex: 2, popularity: 81, image: '🚃', description: 'Hilly coastal city with pastel buildings', lat: 38.7223, lng: -9.1393 },
-  { id: 'c16', name: 'Mumbai', country: 'India', region: 'Asia', costIndex: 1, popularity: 79, image: '🌆', description: 'Bollywood dreams and bustling streets', lat: 19.076, lng: 72.8777 },
-  { id: 'c17', name: 'Santorini', country: 'Greece', region: 'Europe', costIndex: 4, popularity: 86, image: '🌅', description: 'Iconic sunsets and white-washed villages', lat: 36.3932, lng: 25.4615 },
-  { id: 'c18', name: 'Cusco', country: 'Peru', region: 'South America', costIndex: 1, popularity: 77, image: '🏔️', description: 'Gateway to Machu Picchu', lat: -13.532, lng: -71.9675 },
+  { id: 'c1', name: 'Paris', country: 'France', region: 'Europe', costIndex: 4, popularity: 95, image: '🗼', description: 'City of Light, romance, and world-class cuisine', lat: 48.8566, lng: 2.3522, tags: ['Historical', 'Culinary'] },
+  { id: 'c2', name: 'Tokyo', country: 'Japan', region: 'Asia', costIndex: 4, popularity: 92, image: '🏯', description: 'A fusion of ultramodern and traditional culture', lat: 35.6762, lng: 139.6503, tags: ['Adventure', 'Culinary', 'Nightlife'] },
+  { id: 'c3', name: 'New York', country: 'USA', region: 'North America', costIndex: 5, popularity: 93, image: '🗽', description: 'The city that never sleeps', lat: 40.7128, lng: -74.006, tags: ['Nightlife', 'SoloTravel'] },
+  { id: 'c4', name: 'Bali', country: 'Indonesia', region: 'Asia', costIndex: 2, popularity: 88, image: '🏝️', description: 'Tropical paradise with ancient temples', lat: -8.3405, lng: 115.092, tags: ['BeachVibes', 'Nature', 'Relaxation'] },
+  { id: 'c5', name: 'Barcelona', country: 'Spain', region: 'Europe', costIndex: 3, popularity: 87, image: '⛪', description: 'Gaudí architecture meets Mediterranean vibes', lat: 41.3874, lng: 2.1686, tags: ['Historical', 'BeachVibes'] },
+  { id: 'c6', name: 'Dubai', country: 'UAE', region: 'Middle East', costIndex: 5, popularity: 85, image: '🏙️', description: 'Futuristic skyline and luxury experiences', lat: 25.2048, lng: 55.2708, tags: ['Adventure', 'Nightlife'] },
+  { id: 'c7', name: 'Rome', country: 'Italy', region: 'Europe', costIndex: 3, popularity: 90, image: '🏛️', description: 'Eternal city of history and art', lat: 41.9028, lng: 12.4964, tags: ['Historical', 'Culinary'] },
+  { id: 'c8', name: 'Bangkok', country: 'Thailand', region: 'Asia', costIndex: 1, popularity: 86, image: '🛕', description: 'Street food capital with golden temples', lat: 13.7563, lng: 100.5018, tags: ['Culinary', 'Nightlife'] },
+  { id: 'c9', name: 'London', country: 'UK', region: 'Europe', costIndex: 5, popularity: 91, image: '🎡', description: 'Historic charm meets modern energy', lat: 51.5074, lng: -0.1278, tags: ['Historical', 'SoloTravel'] },
+  { id: 'c10', name: 'Sydney', country: 'Australia', region: 'Oceania', costIndex: 4, popularity: 84, image: '🏖️', description: 'Stunning harbors and beaches', lat: -33.8688, lng: 151.2093, tags: ['BeachVibes', 'Adventure'] },
+  { id: 'c11', name: 'Istanbul', country: 'Turkey', region: 'Europe', costIndex: 2, popularity: 83, image: '🕌', description: 'Where East meets West', lat: 41.0082, lng: 28.9784, tags: ['Historical', 'Culinary'] },
+  { id: 'c12', name: 'Marrakech', country: 'Morocco', region: 'Africa', costIndex: 2, popularity: 78, image: '🏜️', description: 'Vibrant souks and desert charm', lat: 31.6295, lng: -7.9811, tags: ['Historical', 'Adventure'] },
+  { id: 'c13', name: 'Kyoto', country: 'Japan', region: 'Asia', costIndex: 3, popularity: 82, image: '⛩️', description: 'Ancient capital of temples and geishas', lat: 35.0116, lng: 135.7681, tags: ['Historical', 'Nature'] },
+  { id: 'c14', name: 'Cape Town', country: 'South Africa', region: 'Africa', costIndex: 2, popularity: 80, image: '🏔️', description: 'Where mountains meet the ocean', lat: -33.9249, lng: 18.4241, tags: ['Nature', 'Adventure'] },
+  { id: 'c15', name: 'Lisbon', country: 'Portugal', region: 'Europe', costIndex: 2, popularity: 81, image: '🚃', description: 'Hilly coastal city with pastel buildings', lat: 38.7223, lng: -9.1393, tags: ['Historical', 'BeachVibes'] },
+  { id: 'c16', name: 'Mumbai', country: 'India', region: 'Asia', costIndex: 1, popularity: 79, image: '🌆', description: 'Bollywood dreams and bustling streets', lat: 19.076, lng: 72.8777, tags: ['Culinary', 'Nightlife'] },
+  { id: 'c17', name: 'Santorini', country: 'Greece', region: 'Europe', costIndex: 4, popularity: 86, image: '🌅', description: 'Iconic sunsets and white-washed villages', lat: 36.3932, lng: 25.4615, tags: ['BeachVibes', 'Relaxation'] },
+  { id: 'c18', name: 'Cusco', country: 'Peru', region: 'South America', costIndex: 1, popularity: 77, image: '🏔️', description: 'Gateway to Machu Picchu', lat: -13.532, lng: -71.9675, tags: ['Historical', 'Nature', 'Adventure'] },
 ];
 
 const ACTIVITIES_DB = [
-  { id: 'a1', name: 'City Walking Tour', type: 'Sightseeing', cost: 25, duration: 3, cityIds: ['c1','c3','c5','c7','c9'], description: 'Explore landmarks with a local guide', image: '🚶' },
-  { id: 'a2', name: 'Food Tasting Tour', type: 'Food', cost: 60, duration: 3, cityIds: ['c1','c2','c5','c7','c8'], description: 'Sample local delicacies and street food', image: '🍜' },
-  { id: 'a3', name: 'Museum Visit', type: 'Culture', cost: 20, duration: 2, cityIds: ['c1','c3','c7','c9','c2'], description: 'Discover art and history collections', image: '🖼️' },
-  { id: 'a4', name: 'Scuba Diving', type: 'Adventure', cost: 120, duration: 4, cityIds: ['c4','c10','c17'], description: 'Explore underwater coral reefs', image: '🤿' },
-  { id: 'a5', name: 'Temple Visit', type: 'Culture', cost: 10, duration: 2, cityIds: ['c2','c4','c8','c13'], description: 'Visit ancient temples and shrines', image: '🛕' },
-  { id: 'a6', name: 'Desert Safari', type: 'Adventure', cost: 80, duration: 5, cityIds: ['c6','c12'], description: 'Thrilling dune bashing and camel rides', image: '🐪' },
-  { id: 'a7', name: 'Sunset Cruise', type: 'Relaxation', cost: 90, duration: 3, cityIds: ['c4','c10','c17','c14'], description: 'Watch the sunset from the water', image: '⛵' },
-  { id: 'a8', name: 'Cooking Class', type: 'Food', cost: 55, duration: 3, cityIds: ['c1','c5','c7','c8','c2'], description: 'Learn to cook traditional dishes', image: '👨‍🍳' },
-  { id: 'a9', name: 'Hiking Trail', type: 'Adventure', cost: 15, duration: 5, cityIds: ['c4','c14','c18','c10'], description: 'Trek through stunning landscapes', image: '🥾' },
-  { id: 'a10', name: 'Spa & Wellness', type: 'Relaxation', cost: 100, duration: 3, cityIds: ['c4','c6','c2','c8'], description: 'Rejuvenate with traditional treatments', image: '🧖' },
-  { id: 'a11', name: 'Night Market Tour', type: 'Food', cost: 30, duration: 2, cityIds: ['c2','c8','c16','c11'], description: 'Street food under the stars', image: '🌃' },
-  { id: 'a12', name: 'Art Gallery Hopping', type: 'Culture', cost: 35, duration: 3, cityIds: ['c1','c3','c9','c15'], description: 'Contemporary and classic art', image: '🎨' },
-  { id: 'a13', name: 'Surfing Lesson', type: 'Adventure', cost: 70, duration: 3, cityIds: ['c4','c10','c15','c14'], description: 'Catch waves with expert instructors', image: '🏄' },
-  { id: 'a14', name: 'Wine Tasting', type: 'Food', cost: 65, duration: 2, cityIds: ['c1','c5','c7','c14','c15'], description: 'Sample regional wines', image: '🍷' },
-  { id: 'a15', name: 'Historical Tour', type: 'Sightseeing', cost: 30, duration: 4, cityIds: ['c7','c11','c18','c13'], description: 'Walk through centuries of history', image: '🏰' },
-  { id: 'a16', name: 'Shopping Experience', type: 'Sightseeing', cost: 0, duration: 3, cityIds: ['c3','c6','c2','c11','c12'], description: 'From luxury malls to local bazaars', image: '🛍️' },
+  { id: 'a1', name: 'City Walking Tour', type: 'Sightseeing', cost: 25, duration: 3, physicalActivity: 'Medium', cityIds: ['c1','c3','c5','c7','c9'], description: 'Explore landmarks with a local guide', image: '🚶' },
+  { id: 'a2', name: 'Food Tasting Tour', type: 'Food', cost: 60, duration: 3, physicalActivity: 'Low', cityIds: ['c1','c2','c5','c7','c8'], description: 'Sample local delicacies and street food', image: '🍜' },
+  { id: 'a3', name: 'Museum Visit', type: 'Culture', cost: 20, duration: 2, physicalActivity: 'Low', cityIds: ['c1','c3','c7','c9','c2'], description: 'Discover art and history collections', image: '🖼️' },
+  { id: 'a4', name: 'Scuba Diving', type: 'Adventure', cost: 120, duration: 4, physicalActivity: 'High', cityIds: ['c4','c10','c17'], description: 'Explore underwater coral reefs', image: '🤿' },
+  { id: 'a5', name: 'Temple Visit', type: 'Culture', cost: 10, duration: 2, physicalActivity: 'Low', cityIds: ['c2','c4','c8','c13'], description: 'Visit ancient temples and shrines', image: '🛕' },
+  { id: 'a6', name: 'Desert Safari', type: 'Adventure', cost: 80, duration: 5, physicalActivity: 'High', cityIds: ['c6','c12'], description: 'Thrilling dune bashing and camel rides', image: '🐪' },
+  { id: 'a7', name: 'Sunset Cruise', type: 'Relaxation', cost: 90, duration: 3, physicalActivity: 'Low', cityIds: ['c4','c10','c17','c14'], description: 'Watch the sunset from the water', image: '⛵' },
+  { id: 'a8', name: 'Cooking Class', type: 'Food', cost: 55, duration: 3, physicalActivity: 'Low', cityIds: ['c1','c5','c7','c8','c2'], description: 'Learn to cook traditional dishes', image: '👨‍🍳' },
+  { id: 'a9', name: 'Hiking Trail', type: 'Adventure', cost: 15, duration: 5, physicalActivity: 'High', cityIds: ['c4','c14','c18','c10'], description: 'Trek through stunning landscapes', image: '🥾' },
+  { id: 'a10', name: 'Spa & Wellness', type: 'Relaxation', cost: 100, duration: 3, physicalActivity: 'Low', cityIds: ['c4','c6','c2','c8'], description: 'Rejuvenate with traditional treatments', image: '🧖' },
+  { id: 'a11', name: 'Night Market Tour', type: 'Food', cost: 30, duration: 2, physicalActivity: 'Medium', cityIds: ['c2','c8','c16','c11'], description: 'Street food under the stars', image: '🌃' },
+  { id: 'a12', name: 'Art Gallery Hopping', type: 'Culture', cost: 35, duration: 3, physicalActivity: 'Low', cityIds: ['c1','c3','c9','c15'], description: 'Contemporary and classic art', image: '🎨' },
+  { id: 'a13', name: 'Surfing Lesson', type: 'Adventure', cost: 70, duration: 3, physicalActivity: 'High', cityIds: ['c4','c10','c15','c14'], description: 'Catch waves with expert instructors', image: '🏄' },
+  { id: 'a14', name: 'Wine Tasting', type: 'Food', cost: 65, duration: 2, physicalActivity: 'Low', cityIds: ['c1','c5','c7','c14','c15'], description: 'Sample regional wines', image: '🍷' },
+  { id: 'a15', name: 'Historical Tour', type: 'Sightseeing', cost: 30, duration: 4, physicalActivity: 'Medium', cityIds: ['c7','c11','c18','c13'], description: 'Walk through centuries of history', image: '🏰' },
+  { id: 'a16', name: 'Shopping Experience', type: 'Sightseeing', cost: 0, duration: 3, physicalActivity: 'Low', cityIds: ['c3','c6','c2','c11','c12'], description: 'From luxury malls to local bazaars', image: '🛍️' },
 ];
 
 const DEFAULT_PACKING = [
@@ -99,8 +99,12 @@ function reducer(state, action) {
       return { ...state, trips: state.trips.map(t => t.id === rtid ? { ...t, stops: newStops } : t) };
     }
     case 'ADD_ACTIVITY_TO_STOP': {
-      const { tripId: atid, stopId: asid, activity } = action.payload;
-      return { ...state, trips: state.trips.map(t => t.id === atid ? { ...t, stops: t.stops.map(s => s.id === asid ? { ...s, activities: [...s.activities, { ...activity, instanceId: generateId() }] } : s) } : t) };
+      const { tripId: atid, stopId: asid, activity, dayIndex } = action.payload;
+      return { ...state, trips: state.trips.map(t => t.id === atid ? { ...t, stops: t.stops.map(s => s.id === asid ? { ...s, activities: [...(s.activities || []), { ...activity, instanceId: generateId(), dayIndex: dayIndex || 0 }] } : s) } : t) };
+    }
+    case 'UPDATE_TRIP_BUDGET': {
+      const { tripId: btid, budget, categoryCosts } = action.payload;
+      return { ...state, trips: state.trips.map(t => t.id === btid ? { ...t, budget, categoryCosts } : t) };
     }
     case 'REMOVE_ACTIVITY_FROM_STOP': {
       const { tripId: ratid, stopId: rasid, instanceId } = action.payload;

@@ -17,19 +17,35 @@ export default function BudgetBreakdown() {
 
   const totalBudget = trip.stops?.reduce((sum, stop) => sum + (stop.activities?.reduce((a, act) => a + (act.cost || 0), 0) || 0), 0) || 0;
 
-  // Mock category breakdown for demonstration
-  const categories = {
+  const [budgetLimit, setBudgetLimit] = useState(trip.budget || 5000);
+  const [costs, setCosts] = useState({
     Activities: totalBudget,
-    Accommodation: totalBudget * 1.5,
-    Transport: totalBudget * 0.8,
-    Food: totalBudget * 1.2
+    Accommodation: Math.round(totalBudget * 1.5),
+    Transport: Math.round(totalBudget * 0.8),
+    Food: Math.round(totalBudget * 1.2)
+  });
+
+  const handleCostChange = (cat, val) => {
+    const newCosts = { ...costs, [cat]: parseInt(val) || 0 };
+    setCosts(newCosts);
+    dispatch({ type: 'UPDATE_TRIP_BUDGET', payload: { tripId: trip.id, budget: budgetLimit, categoryCosts: newCosts } });
   };
 
+  const handleLimitChange = (val) => {
+    const limit = parseInt(val) || 0;
+    setBudgetLimit(limit);
+    dispatch({ type: 'UPDATE_TRIP_BUDGET', payload: { tripId: trip.id, budget: limit, categoryCosts: costs } });
+  };
+
+  const totalEstCost = Object.values(costs).reduce((a, b) => a + b, 0);
+  const isOverBudget = totalEstCost > budgetLimit;
+  const budgetProgress = Math.min(100, (totalEstCost / budgetLimit) * 100);
+
   const chartData = {
-    labels: Object.keys(categories),
+    labels: Object.keys(costs),
     datasets: [
       {
-        data: Object.values(categories),
+        data: Object.values(costs),
         backgroundColor: ['rgba(99,102,241,0.8)', 'rgba(16,185,129,0.8)', 'rgba(245,158,11,0.8)', 'rgba(244,63,94,0.8)'],
         borderColor: ['rgba(99,102,241,1)', 'rgba(16,185,129,1)', 'rgba(245,158,11,1)', 'rgba(244,63,94,1)'],
         borderWidth: 1,
@@ -40,8 +56,6 @@ export default function BudgetBreakdown() {
   const chartOptions = {
     plugins: { legend: { position: 'bottom', labels: { color: '#f1f5f9' } } }
   };
-
-  const totalEstCost = Object.values(categories).reduce((a, b) => a + b, 0);
 
   return (
     <div className="page-container content-wrapper">
@@ -54,13 +68,31 @@ export default function BudgetBreakdown() {
       </div>
 
       <div className="budget-grid animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-        <div className="glass-card p-6 flex flex-col items-center justify-center text-center">
-          <h3 className="text-secondary mb-2">Total Estimated Cost</h3>
-          <div className="text-4xl font-bold text-emerald mb-4 flex items-center justify-center">
-            <DollarSign size={32} />{totalEstCost.toLocaleString()}
+        <div className="glass-card p-6 flex flex-col justify-center">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-secondary">Budget Status</h3>
+            <span className={`font-bold ${isOverBudget ? 'text-rose' : 'text-emerald'}`}>
+              {Math.round(budgetProgress)}%
+            </span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-warm bg-warm-alpha p-2 rounded-md">
-            <AlertCircle size={16} /> Budget limits not set
+          <div className="progress-bar mb-4">
+            <div 
+              className={`progress-fill ${isOverBudget ? 'bg-rose' : 'bg-emerald'}`} 
+              style={{ width: `${budgetProgress}%` }}
+            ></div>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span>Spent: ${totalEstCost.toLocaleString()}</span>
+            <span>Limit: ${budgetLimit.toLocaleString()}</span>
+          </div>
+          <div className="mt-4">
+            <label className="text-xs font-semibold block mb-1">Set Budget Limit</label>
+            <input 
+              type="number" 
+              value={budgetLimit} 
+              onChange={(e) => handleLimitChange(e.target.value)}
+              className="bg-glass border border-glass rounded p-2 w-full text-sm"
+            />
           </div>
         </div>
 
@@ -71,12 +103,22 @@ export default function BudgetBreakdown() {
         </div>
 
         <div className="glass-card p-6 col-span-full">
-          <h3 className="mb-4 text-xl">Cost Breakdown</h3>
-          <div className="flex flex-col gap-4">
-            {Object.entries(categories).map(([key, value], index) => (
-              <div key={key} className="flex justify-between items-center p-4 border border-glass rounded-lg bg-glass-hover">
-                <span className="font-semibold text-lg">{key}</span>
-                <span className="font-bold text-emerald">${value.toLocaleString()}</span>
+          <h3 className="mb-4 text-xl">Adjust Spending</h3>
+          <div className="flex flex-col gap-6">
+            {Object.entries(costs).map(([key, value]) => (
+              <div key={key} className="flex flex-col gap-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">{key}</span>
+                  <span className="font-bold text-emerald">${value.toLocaleString()}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max={budgetLimit} 
+                  value={value} 
+                  onChange={(e) => handleCostChange(key, e.target.value)}
+                  className="w-full h-2 bg-glass rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                />
               </div>
             ))}
           </div>
@@ -100,7 +142,10 @@ export default function BudgetBreakdown() {
         .text-sm { font-size: 0.875rem; }
         .font-bold { font-weight: 700; }
         .font-semibold { font-weight: 600; }
-        .text-emerald { color: var(--accent-emerald); }
+        .text-emerald { color: #34d399; }
+        .bg-emerald { background: #34d399; }
+        .text-rose { color: #fb7185; }
+        .bg-rose { background: #fb7185; }
         .text-warm { color: var(--accent-warm); }
         .text-secondary { color: var(--text-secondary); }
         .bg-warm-alpha { background: rgba(245,158,11,0.15); }

@@ -95,32 +95,38 @@ input::placeholder, textarea::placeholder { color: var(--text-muted); }
 /* Utility Classes */
 .glass-card {
   background: var(--bg-glass);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
-  transition: all var(--transition-base);
+  transition: all var(--transition-slow);
 }
 .glass-card:hover {
   background: var(--bg-glass-hover);
   border-color: var(--border-glass-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 12px 28px;
+  padding: 12px 32px;
   border-radius: var(--radius-full);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
   transition: all var(--transition-base);
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); filter: brightness(1.1); }
+.btn-primary:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5); 
+  filter: brightness(1.1); 
+}
+.btn-primary.pulse { animation: pulse-glow 2s infinite; }
 
 .btn-secondary {
   background: var(--bg-glass);
